@@ -3,6 +3,12 @@ import mongoose from "mongoose";
 import cors from "cors";
 import fileUpload from "express-fileupload";
 import "dotenv/config";
+import path from 'path'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 import * as fs from "fs";
 
@@ -33,6 +39,12 @@ mongoose
   })
   .then(() => console.log("database connected successfully"))
   .catch((err) => console.log("error connecting to mongoDB", err));
+
+// Serve frontend client/build folder
+app.use(express.static(path.join(__dirname, "client/build")));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/client/build/index.html"));
+});
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
